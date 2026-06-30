@@ -134,6 +134,42 @@ class Grafo:
 
     # -----------------------------------------------------
 
+    def obtener_todas_rutas_desde(self, origen):
+        """
+        Devuelve todas las rutas simples (sin ciclos) que parten
+        desde el nodo `origen` hacia cualquier nodo alcanzable.
+
+        Retorna
+        -------
+        list
+            Lista de tuplas: (ruta_lista, peso_total). Ejemplo:
+            (["Restaurante", "A", "B"], 12)
+        """
+
+        if origen not in self.grafo:
+            return []
+
+        rutas = []
+
+        def _dfs(actual, camino, peso_acumulado):
+            for vecino, peso in self.grafo.get(actual, []):
+                if vecino in camino:
+                    continue
+
+                nuevo_camino = camino + [vecino]
+                nuevo_peso = peso_acumulado + peso
+
+                rutas.append((nuevo_camino, nuevo_peso))
+
+                # Seguir profundizando desde el vecino
+                _dfs(vecino, nuevo_camino, nuevo_peso)
+
+        _dfs(origen, [origen], 0)
+
+        return rutas
+
+    # -----------------------------------------------------
+
     def mostrar_grafo(self):
         """
         Imprime el grafo en consola.

@@ -88,6 +88,8 @@ def main():
             print(f"BFS: {' → '.join(bfs_recorrido)}")
             print(f"DFS: {' → '.join(dfs_recorrido)}")
 
+    
+
 
 if __name__ == "__main__":
     main()
