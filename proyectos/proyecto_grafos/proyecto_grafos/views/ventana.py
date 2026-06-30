@@ -332,10 +332,17 @@ class Ventana:
                 messagebox.showerror("Error", "No puede conectar un nodo consigo mismo")
                 return
 
+            # Solo conexión unidireccional (en el orden especificado)
             self.controlador.agregar_arista(origen, destino, peso)
-            messagebox.showinfo("Éxito", f"Conexión creada: {origen} -> {destino} ({peso})")
+            
+            messagebox.showinfo("Éxito", f"Conexión creada: {origen} → {destino} ({peso})")
 
             grafo = self.controlador.obtener_grafo()
+            nodos = list(grafo.keys())
+            
+            # IMPORTANTE: Regenerar posiciones para visualizar correctamente
+            posiciones = self.generar_posiciones(nodos)
+            self.panel.set_posiciones(posiciones)
             self.panel.dibujar(grafo)
 
             ventana.destroy()

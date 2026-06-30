@@ -74,54 +74,70 @@ class PanelGrafo:
 
                 x2, y2 = self.posiciones[destino]
 
-                # línea
+                # Acortar la línea para que no atraviese el nodo destino
+                radio_nodo = 24
+                dx = x2 - x1
+                dy = y2 - y1
+                distancia = (dx * dx + dy * dy) ** 0.5
+                
+                if distancia > 0:
+                    # Calcular punto donde termina la línea (antes del nodo)
+                    x2_acortado = x2 - (dx / distancia) * radio_nodo
+                    y2_acortado = y2 - (dy / distancia) * radio_nodo
+                else:
+                    x2_acortado = x2
+                    y2_acortado = y2
+
+                # línea con flecha - TODO NEGRO
                 self.canvas.create_line(
-                    x1, y1, x2, y2,
-                    fill="gray",
-                    width=2,
-                    arrow=tk.LAST
+                    x1, y1, x2_acortado, y2_acortado,
+                    fill="black",
+                    width=3,
+                    arrow=tk.LAST,
+                    arrowshape=(12, 15, 6)
                 )
 
                 pareja = tuple(sorted((origen, destino)))
                 if pareja not in aristas_vistas:
                     aristas_vistas.add(pareja)
 
-                    # peso
+                    # peso - mejor posicionado
                     px = (x1 + x2) / 2
                     py = (y1 + y2) / 2
 
-                    dx = x2 - x1
-                    dy = y2 - y1
-                    longitud = (dx * dx + dy * dy) ** 0.5
+                    dx_pos = x2 - x1
+                    dy_pos = y2 - y1
+                    longitud = (dx_pos * dx_pos + dy_pos * dy_pos) ** 0.5
 
                     if longitud > 0:
-                        nx = -dy / longitud
-                        ny = dx / longitud
-                        offset = 16
+                        nx = -dy_pos / longitud
+                        ny = dx_pos / longitud
+                        offset = 20  # Mayor offset para mejor visibilidad
                         px += nx * offset
                         py += ny * offset
                     else:
                         px += 10
                         py -= 10
 
-                    rect_x1 = px - 14
-                    rect_y1 = py - 9
-                    rect_x2 = px + 14
-                    rect_y2 = py + 9
+                    rect_x1 = px - 16
+                    rect_y1 = py - 11
+                    rect_x2 = px + 16
+                    rect_y2 = py + 11
 
+                    # Fondo blanco con borde y texto negro
                     self.canvas.create_rectangle(
                         rect_x1, rect_y1, rect_x2, rect_y2,
                         fill="white",
                         outline="black",
-                        width=1
+                        width=2
                     )
 
                     self.canvas.create_text(
                         px,
                         py,
                         text=str(peso),
-                        fill="blue",
-                        font=("Arial", 9, "bold"),
+                        fill="black",
+                        font=("Arial", 10, "bold"),
                         anchor="center",
                         tags="peso"
                     )
@@ -135,7 +151,7 @@ class PanelGrafo:
                 x + radio, y + radio,
                 fill="lightblue",
                 outline="black",
-                width=1
+                width=2
             )
 
             self.canvas.create_text(
